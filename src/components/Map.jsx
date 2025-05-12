@@ -1,11 +1,52 @@
 import L from "leaflet";
 import "leaflet-draw/dist/leaflet.draw.css";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useRef } from "react";
-import { FeatureGroup, MapContainer, TileLayer, useMap } from "react-leaflet";
+import { useEffect, useRef, useState } from "react";
+import {
+  FeatureGroup,
+  LayersControl,
+  MapContainer,
+  TileLayer,
+  useMap,
+} from "react-leaflet";
 
 // Import leaflet-draw directement
 import "leaflet-draw";
+
+// Liste des fonds de carte disponibles
+const basemaps = {
+  osm: {
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    name: "OpenStreetMap",
+  },
+  satellite: {
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution:
+      '&copy; <a href="https://www.esri.com/">Esri</a>, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    name: "Satellite",
+  },
+  topo: {
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution:
+      '&copy; <a href="https://opentopomap.org">OpenTopoMap</a> contributors',
+    name: "Topographique",
+  },
+  dark: {
+    url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    name: "Mode sombre",
+  },
+  mapboxStreets: {
+    url: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}",
+    attribution:
+      '© <a href="https://www.mapbox.com/about/maps/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    accessToken: import.meta.env.VITE_MAPBOX_TOKEN || "",
+    name: "Mapbox Streets",
+  },
+};
 
 // Composant interne pour accéder à l'instance de la carte
 const DrawControl = ({ onPolygonDrawn }) => {
@@ -59,7 +100,72 @@ const DrawControl = ({ onPolygonDrawn }) => {
   return <FeatureGroup ref={featureGroupRef} />;
 };
 
-const MapComponent = ({ onPolygonDrawn }) => {
+// Composant pour géolocalisations au chargement ou sur demande
+const GeoLocationControl = ({ onLocationFound }) => {
+  const map = useMap();
+
+  const handleLocationFound = (e) => {
+    map.flyTo(e.latlng, 13);
+    if (onLocationFound) {
+      onLocationFound(e.latlng);
+    }
+  };
+
+  const handleGeoLocation = () => {
+    map.locate({ setView: false });
+  };
+
+  useEffect(() => {
+    map.on("locationfound", handleLocationFound);
+
+    return () => {
+      map.off("locationfound", handleLocationFound);
+    };
+  }, [map]);
+
+  // Ajouter un bouton de géolocalisation à la carte
+  useEffect(() => {
+    const geoLocateControl = L.control({ position: "topleft" });
+
+    geoLocateControl.onAdd = () => {
+      const div = L.DomUtil.create("div", "leaflet-bar leaflet-control");
+      const button = L.DomUtil.create("a", "", div);
+
+      button.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><point cx="12" cy="12" r="1"></point></svg>';
+      button.title = "Votre position";
+      button.style.display = "flex";
+      button.style.alignItems = "center";
+      button.style.justifyContent = "center";
+      button.style.fontSize = "18px";
+      button.style.width = "30px";
+      button.style.height = "30px";
+
+      L.DomEvent.on(button, "click", (e) => {
+        L.DomEvent.stopPropagation(e);
+        handleGeoLocation();
+      });
+
+      return div;
+    };
+
+    geoLocateControl.addTo(map);
+
+    return () => {
+      geoLocateControl.remove();
+    };
+  }, [map]);
+
+  return null;
+};
+
+const MapComponent = ({
+  onPolygonDrawn,
+  defaultCenter = [48.856614, 2.3522219],
+}) => {
+  const [selectedBasemap, setSelectedBasemap] = useState("osm");
+  const [mapCenter, setMapCenter] = useState(defaultCenter);
+
   useEffect(() => {
     // Correction du problème d'icône Leaflet
     delete L.Icon.Default.prototype._getIconUrl;
@@ -72,19 +178,64 @@ const MapComponent = ({ onPolygonDrawn }) => {
     });
   }, []);
 
+  const handleLocationFound = (latlng) => {
+    setMapCenter([latlng.lat, latlng.lng]);
+  };
+
   return (
-    <div className="w-full h-[70vh]">
+    <div className="w-full h-[70vh] relative">
       <MapContainer
-        center={[48.856614, 2.3522219]} // Paris par défaut
+        center={mapCenter}
         zoom={6}
         style={{ height: "100%", width: "100%" }}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        {/* Contrôle des couches */}
+        <LayersControl position="topright">
+          {Object.entries(basemaps).map(([key, layer]) => (
+            <LayersControl.BaseLayer
+              key={key}
+              name={layer.name}
+              checked={key === selectedBasemap}
+            >
+              <TileLayer
+                url={layer.url}
+                attribution={layer.attribution}
+                {...(layer.accessToken && { accessToken: layer.accessToken })}
+                {...(layer.subdomains && { subdomains: layer.subdomains })}
+                {...(layer.ext && { ext: layer.ext })}
+                {...(layer.minZoom && { minZoom: layer.minZoom })}
+                {...(layer.maxZoom && { maxZoom: layer.maxZoom })}
+              />
+            </LayersControl.BaseLayer>
+          ))}
+        </LayersControl>
+
+        {/* Contrôle de géolocalisation */}
+        <GeoLocationControl onLocationFound={handleLocationFound} />
+
+        {/* Outil de dessin de polygones */}
         <DrawControl onPolygonDrawn={onPolygonDrawn} />
       </MapContainer>
+
+      {/* Sélecteur de fond de carte en dehors de la carte */}
+      <div className="absolute bottom-4 left-4 bg-white p-2 rounded-md shadow-md z-[1000] max-w-xs">
+        <div className="text-sm font-semibold mb-1">Fond de carte</div>
+        <div className="grid grid-cols-2 gap-1 text-xs">
+          {Object.entries(basemaps).map(([key, layer]) => (
+            <button
+              key={key}
+              onClick={() => setSelectedBasemap(key)}
+              className={`px-2 py-1 rounded ${
+                key === selectedBasemap
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              {layer.name}
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
