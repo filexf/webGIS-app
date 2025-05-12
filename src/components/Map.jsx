@@ -10,10 +10,10 @@ import {
   useMap,
 } from "react-leaflet";
 
-// Import leaflet-draw directement
+// Direct import of leaflet-draw
 import "leaflet-draw";
 
-// Liste des fonds de carte disponibles
+// List of available basemaps
 const basemaps = {
   osm: {
     url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -31,13 +31,13 @@ const basemaps = {
     url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
     attribution:
       '&copy; <a href="https://opentopomap.org">OpenTopoMap</a> contributors',
-    name: "Topographique",
+    name: "Topographic",
   },
   dark: {
     url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    name: "Mode sombre",
+    name: "Dark Mode",
   },
   mapboxStreets: {
     url: "https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}",
@@ -48,7 +48,7 @@ const basemaps = {
   },
 };
 
-// Composant interne pour accéder à l'instance de la carte
+// Internal component to access the map instance
 const DrawControl = ({ onPolygonDrawn }) => {
   const map = useMap();
   const featureGroupRef = useRef(null);
@@ -56,7 +56,7 @@ const DrawControl = ({ onPolygonDrawn }) => {
   useEffect(() => {
     if (!featureGroupRef.current) return;
 
-    // Création des contrôles de dessin
+    // Create drawing controls
     const drawControl = new L.Control.Draw({
       draw: {
         rectangle: false,
@@ -70,28 +70,28 @@ const DrawControl = ({ onPolygonDrawn }) => {
       },
     });
 
-    // Ajout des contrôles à la carte
+    // Add controls to the map
     map.addControl(drawControl);
 
-    // Gestion de l'événement de dessin terminé
+    // Handle the drawing finished event
     map.on(L.Draw.Event.CREATED, (e) => {
       const { layerType, layer } = e;
 
       if (layerType === "polygon") {
-        // Ajout de la couche au FeatureGroup
+        // Add the layer to the FeatureGroup
         featureGroupRef.current.addLayer(layer);
 
-        // Extraire les coordonnées du polygone
+        // Extract the polygon coordinates
         const polygonCoords = layer
           .getLatLngs()[0]
           .map((coord) => [coord.lat, coord.lng]);
 
-        // Passer les coordonnées au composant parent
+        // Pass the coordinates to the parent component
         onPolygonDrawn(polygonCoords);
       }
     });
 
-    // Nettoyage lors du démontage du composant
+    // Cleanup when the component is unmounted
     return () => {
       map.removeControl(drawControl);
     };
@@ -100,7 +100,7 @@ const DrawControl = ({ onPolygonDrawn }) => {
   return <FeatureGroup ref={featureGroupRef} />;
 };
 
-// Composant pour géolocalisations au chargement ou sur demande
+// Component for geolocation on load or on demand
 const GeoLocationControl = ({ onLocationFound }) => {
   const map = useMap();
 
@@ -123,7 +123,7 @@ const GeoLocationControl = ({ onLocationFound }) => {
     };
   }, [map]);
 
-  // Ajouter un bouton de géolocalisation à la carte
+  // Add a geolocation button to the map
   useEffect(() => {
     const geoLocateControl = L.control({ position: "topleft" });
 
@@ -133,7 +133,7 @@ const GeoLocationControl = ({ onLocationFound }) => {
 
       button.innerHTML =
         '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><point cx="12" cy="12" r="1"></point></svg>';
-      button.title = "Votre position";
+      button.title = "Your location";
       button.style.display = "flex";
       button.style.alignItems = "center";
       button.style.justifyContent = "center";
@@ -167,7 +167,7 @@ const MapComponent = ({
   const [mapCenter, setMapCenter] = useState(defaultCenter);
 
   useEffect(() => {
-    // Correction du problème d'icône Leaflet
+    // Fix for Leaflet icon issue
     delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl:
@@ -189,7 +189,7 @@ const MapComponent = ({
         zoom={6}
         style={{ height: "100%", width: "100%" }}
       >
-        {/* Contrôle des couches */}
+        {/* Layer control */}
         <LayersControl position="topright">
           {Object.entries(basemaps).map(([key, layer]) => (
             <LayersControl.BaseLayer
@@ -210,14 +210,12 @@ const MapComponent = ({
           ))}
         </LayersControl>
 
-        {/* Contrôle de géolocalisation */}
+        {/* Geolocation control */}
         <GeoLocationControl onLocationFound={handleLocationFound} />
 
-        {/* Outil de dessin de polygones */}
+        {/* Polygon drawing tool */}
         <DrawControl onPolygonDrawn={onPolygonDrawn} />
       </MapContainer>
-
-
     </div>
   );
 };

@@ -18,7 +18,7 @@ import {
   fetchPopulationEstimate,
 } from "../utils/apiService";
 
-// Enregistrement des éléments nécessaires pour Chart.js
+// Registration of necessary elements for Chart.js
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -44,7 +44,7 @@ const DataDisplay = ({ polygonData }) => {
       setIsLoading(true);
       setError(null);
 
-      // Récupération de données réelles basées sur le type demandé
+      // Fetching real data based on the requested type
       const fetchData = async () => {
         try {
           let result;
@@ -53,30 +53,30 @@ const DataDisplay = ({ polygonData }) => {
             case "landUse":
               result = await fetchLandUseData(polygonData);
               generateLandUseChart(result);
-              setDataSource(result.dataSource || "Source inconnue");
+              setDataSource(result.dataSource || "Unknown source");
               break;
             case "population":
               result = await fetchPopulationEstimate(polygonData);
 
-              // Génération de données démographiques par tranche d'âge
+              // Generating demographic data by age group
               const totalPop = result.population;
               const ageDistribution = generateAgeDistribution(totalPop);
               generatePopulationChart(ageDistribution);
               setDataSource(
-                result.dataSource || result.note || "Source inconnue"
+                result.dataSource || result.note || "Unknown source"
               );
               break;
             case "climate":
               result = await fetchClimateData(polygonData);
               generateClimateChart(result);
-              setDataSource(result.dataSource || "Source inconnue");
+              setDataSource(result.dataSource || "Unknown source");
               break;
             default:
-              setError("Type de données non supporté");
+              setError("Unsupported data type");
           }
         } catch (err) {
-          console.error("Erreur lors de la récupération des données:", err);
-          setError("Impossible de récupérer les données");
+          console.error("Error fetching data:", err);
+          setError("Unable to fetch data");
         } finally {
           setIsLoading(false);
         }
@@ -86,19 +86,19 @@ const DataDisplay = ({ polygonData }) => {
     }
   }, [polygonData, dataType]);
 
-  // Génération d'une distribution d'âge plausible pour une population donnée
+  // Generating a plausible age distribution for a given population
   const generateAgeDistribution = (totalPopulation) => {
-    // Distribution d'âge typique (pourcentages approximatifs)
+    // Typical age distribution (approximate percentages)
     const distribution = {
-      "0-14 ans": Math.random() * 10 + 15, // 15-25%
-      "15-29 ans": Math.random() * 10 + 15, // 15-25%
-      "30-44 ans": Math.random() * 8 + 16, // 16-24%
-      "45-59 ans": Math.random() * 8 + 14, // 14-22%
-      "60-74 ans": Math.random() * 8 + 10, // 10-18%
-      "75+ ans": Math.random() * 8 + 4, // 4-12%
+      "0-14 years": Math.random() * 10 + 15, // 15-25%
+      "15-29 years": Math.random() * 10 + 15, // 15-25%
+      "30-44 years": Math.random() * 8 + 16, // 16-24%
+      "45-59 years": Math.random() * 8 + 14, // 14-22%
+      "60-74 years": Math.random() * 8 + 10, // 10-18%
+      "75+ years": Math.random() * 8 + 4, // 4-12%
     };
 
-    // Normalisation pour que la somme soit égale à 100%
+    // Normalizing so the sum equals 100%
     const total = Object.values(distribution).reduce((a, b) => a + b, 0);
     const normalizedDistribution = {};
 
@@ -111,15 +111,15 @@ const DataDisplay = ({ polygonData }) => {
     return normalizedDistribution;
   };
 
-  // Génération du graphique d'utilisation des terres
+  // Generating the land use chart
   const generateLandUseChart = (data) => {
     if (!data) return;
 
     const chartData = {
-      labels: ["Zones urbaines", "Agriculture", "Forêts", "Eau", "Autres"],
+      labels: ["Urban areas", "Agriculture", "Forests", "Water", "Others"],
       datasets: [
         {
-          label: "Utilisation des terres (%)",
+          label: "Land use (%)",
           data: [
             data.urban || 0,
             data.agriculture || 0,
@@ -141,7 +141,7 @@ const DataDisplay = ({ polygonData }) => {
     setChartData(chartData);
   };
 
-  // Génération du graphique de population
+  // Generating the population chart
   const generatePopulationChart = (data) => {
     if (!data) return;
 
@@ -149,7 +149,7 @@ const DataDisplay = ({ polygonData }) => {
       labels: Object.keys(data),
       datasets: [
         {
-          label: "Population par tranche d'âge",
+          label: "Population by age group",
           data: Object.values(data),
           backgroundColor: [
             "rgba(255, 99, 132, 0.6)",
@@ -166,7 +166,7 @@ const DataDisplay = ({ polygonData }) => {
     setChartData(chartData);
   };
 
-  // Génération du graphique climatique
+  // Generating the climate chart
   const generateClimateChart = (data) => {
     if (!data) return;
 
@@ -176,7 +176,7 @@ const DataDisplay = ({ polygonData }) => {
       labels: months,
       datasets: [
         {
-          label: "Température moyenne (°C)",
+          label: "Average temperature (°C)",
           data: temperatures,
           backgroundColor: "rgba(255, 99, 132, 0.5)",
           borderColor: "rgba(255, 99, 132, 1)",
@@ -187,7 +187,7 @@ const DataDisplay = ({ polygonData }) => {
           pointRadius: 3,
         },
         {
-          label: "Précipitations (mm)",
+          label: "Precipitation (mm)",
           data: precipitation,
           backgroundColor: "rgba(54, 162, 235, 0.5)",
           borderColor: "rgba(54, 162, 235, 1)",
@@ -204,7 +204,7 @@ const DataDisplay = ({ polygonData }) => {
     });
   };
 
-  // Options pour les graphiques standards (non-climat)
+  // Options for standard charts (non-climate)
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -216,10 +216,10 @@ const DataDisplay = ({ polygonData }) => {
         display: true,
         text:
           dataType === "population"
-            ? "Données démographiques"
+            ? "Demographic data"
             : dataType === "landUse"
-            ? "Utilisation des terres (%)"
-            : "Données climatiques",
+            ? "Land use (%)"
+            : "Climate data",
         font: {
           size: 16,
         },
@@ -233,7 +233,7 @@ const DataDisplay = ({ polygonData }) => {
             }
 
             let value = context.parsed;
-            // Si c'est un camembert ou un donut
+            // If it's a pie or doughnut chart
             if (
               context.chart.config.type === "pie" ||
               context.chart.config.type === "doughnut"
@@ -242,7 +242,7 @@ const DataDisplay = ({ polygonData }) => {
             }
 
             if (dataType === "population") {
-              return label + new Intl.NumberFormat("fr-FR").format(value);
+              return label + new Intl.NumberFormat("en-US").format(value);
             } else if (dataType === "landUse") {
               return label + value + "%";
             } else {
@@ -254,7 +254,7 @@ const DataDisplay = ({ polygonData }) => {
     },
   };
 
-  // Options spécifiques pour les données climatiques (double axe Y)
+  // Specific options for climate data (dual Y-axis)
   const climateOptions = {
     responsive: true,
     maintainAspectRatio: false,
@@ -264,7 +264,7 @@ const DataDisplay = ({ polygonData }) => {
       },
       title: {
         display: true,
-        text: "Données climatiques mensuelles",
+        text: "Monthly climate data",
         font: {
           size: 16,
         },
@@ -277,7 +277,7 @@ const DataDisplay = ({ polygonData }) => {
         position: "left",
         title: {
           display: true,
-          text: "Température (°C)",
+          text: "Temperature (°C)",
         },
         grid: {
           drawOnChartArea: false,
@@ -292,7 +292,7 @@ const DataDisplay = ({ polygonData }) => {
         },
         title: {
           display: true,
-          text: "Précipitations (mm)",
+          text: "Precipitation (mm)",
         },
       },
     },
@@ -301,12 +301,12 @@ const DataDisplay = ({ polygonData }) => {
   const renderChart = () => {
     if (!chartData) return null;
 
-    // Si ce sont des données climatiques, utiliser Chart.js directement pour un graphique mixte
+    // If it's climate data, use Chart.js directly for a mixed chart
     if (chartData.isClimate) {
       return <Bar data={chartData} options={climateOptions} />;
     }
 
-    // Sinon, utiliser le type de graphique sélectionné
+    // Otherwise, use the selected chart type
     switch (chartType) {
       case "bar":
         return <Bar data={chartData} options={options} />;
@@ -322,7 +322,7 @@ const DataDisplay = ({ polygonData }) => {
   return (
     <div className="w-full p-4 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-bold">Analyse de la zone sélectionnée</h2>
+        <h2 className="text-xl font-bold">Analysis of the selected area</h2>
         {polygonData && polygonData.length > 0 && !isLoading && (
           <div className="flex gap-2">
             <select
@@ -330,9 +330,9 @@ const DataDisplay = ({ polygonData }) => {
               value={dataType}
               onChange={(e) => setDataType(e.target.value)}
             >
-              <option value="landUse">Utilisation des terres</option>
+              <option value="landUse">Land use</option>
               <option value="population">Population</option>
-              <option value="climate">Climat</option>
+              <option value="climate">Climate</option>
             </select>
             {dataType !== "climate" && (
               <select
@@ -340,9 +340,9 @@ const DataDisplay = ({ polygonData }) => {
                 value={chartType}
                 onChange={(e) => setChartType(e.target.value)}
               >
-                <option value="pie">Camembert</option>
-                <option value="doughnut">Donut</option>
-                <option value="bar">Histogramme</option>
+                <option value="pie">Pie chart</option>
+                <option value="doughnut">Doughnut chart</option>
+                <option value="bar">Bar chart</option>
               </select>
             )}
           </div>
@@ -351,7 +351,7 @@ const DataDisplay = ({ polygonData }) => {
 
       {!polygonData || polygonData.length === 0 ? (
         <div className="h-64 flex items-center justify-center text-gray-500">
-          Dessinez un polygone sur la carte pour afficher les données
+          Draw a polygon on the map to display data
         </div>
       ) : isLoading ? (
         <div className="h-64 flex items-center justify-center">
