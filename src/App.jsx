@@ -68,22 +68,22 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-sky-700 text-white p-4 shadow-md">
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-gradient-to-r from-sky-700 to-blue-900 text-white p-6 shadow-lg">
         <div className="container mx-auto text-center flex flex-col gap-2">
-          <h1 className="text-3xl font-bold">WebGIS Analyzer</h1>
-          <p className="text-sm mt-1 font-bold">
+          <h1 className="text-3xl font-bold tracking-tight">WebGIS Analyzer</h1>
+          <p className="text-sm mt-1 font-medium opacity-90">
             Dessinez un polygone sur la carte pour analyser les données de la
             zone
           </p>
         </div>
       </header>
 
-      <main className="container mx-auto py-6 px-4 space-y-6">
-        <div className="grid md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-4 bg-gray-50 border-b">
-              <h2 className="text-xl font-semibold">Carte interactive</h2>
+      <main className="container mx-auto py-8 px-4 space-y-8">
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="md:col-span-2 bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100">
+            <div className="p-4 bg-gradient-to-r from-gray-50 to-gray-100 border-b">
+              <h2 className="text-xl font-semibold text-gray-800">Carte interactive</h2>
               <p className="text-sm text-gray-600">
                 Utilisez l'outil de dessin pour sélectionner une zone
               </p>
@@ -94,37 +94,61 @@ function App() {
 
           <div className="space-y-6">
             {isLoading ? (
-              <div className="bg-white p-4 rounded-lg shadow-md flex items-center justify-center h-48">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700"></div>
+              <div className="bg-white p-6 rounded-xl shadow-lg flex items-center justify-center h-56 border border-gray-100">
+                <div className="flex flex-col items-center space-y-3">
+                  <div className="animate-spin rounded-full h-12 w-12 border-4 border-t-transparent border-blue-600"></div>
+                  <p className="text-blue-600 font-medium">Chargement des données...</p>
+                </div>
               </div>
             ) : polygonMetrics ? (
               <>
-                <div className="bg-white p-4 rounded-lg shadow-md">
-                  <h2 className="text-xl font-semibold mb-3">
+                <div className="bg-white p-5 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                  <h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
                     Métriques du polygone
                   </h2>
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Superficie:</span>
-                      <span className="font-medium">
+                  <div className="space-y-3.5">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                        </svg>
+                        Superficie:
+                      </span>
+                      <span className="font-medium text-gray-800">
                         {(polygonMetrics.area / 1000000).toFixed(2)} km²
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Périmètre:</span>
-                      <span className="font-medium">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v16a2 2 0 002 2h12a2 2 0 002-2V4" />
+                        </svg>
+                        Périmètre:
+                      </span>
+                      <span className="font-medium text-gray-800">
                         {(polygonMetrics.perimeter / 1000).toFixed(2)} km
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Nombre de points:</span>
-                      <span className="font-medium">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 11V9a2 2 0 00-2-2m2 4v4a2 2 0 104 0v-1m-4-3H9m2 0h4m6 1a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Nombre de points:
+                      </span>
+                      <span className="font-medium text-gray-800">
                         {polygonMetrics.vertexCount}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Centre (lat, lng):</span>
-                      <span className="font-medium">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        Centre:
+                      </span>
+                      <span className="font-medium text-gray-800 text-sm">
                         {polygonMetrics.center.lat}, {polygonMetrics.center.lng}
                       </span>
                     </div>
@@ -132,14 +156,19 @@ function App() {
                 </div>
 
                 {elevationData && (
-                  <div className="bg-white p-4 rounded-lg shadow-md">
-                    <h2 className="text-xl font-semibold mb-3">Topographie</h2>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">
+                  <div className="bg-white p-5 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                    <h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
+                      Topographie
+                    </h2>
+                    <div className="space-y-3.5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h11M9 21V3m12 10h-7" />
+                          </svg>
                           Élévation moyenne:
                         </span>
-                        <span className="font-medium">
+                        <span className="font-medium text-gray-800">
                           {elevationData.centerElevation !== null
                             ? `${elevationData.centerElevation} ${elevationData.unit}`
                             : "Non disponible"}
@@ -150,20 +179,30 @@ function App() {
                 )}
 
                 {populationData && (
-                  <div className="bg-white p-4 rounded-lg shadow-md">
-                    <h2 className="text-xl font-semibold mb-3">Démographie</h2>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">
+                  <div className="bg-white p-5 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                    <h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
+                      Démographie
+                    </h2>
+                    <div className="space-y-3.5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h11M9 21V3m12 10h-7" />
+                          </svg>
                           Population estimée:
                         </span>
-                        <span className="font-medium">
+                        <span className="font-medium text-gray-800">
                           {formatNumber(populationData.population)}
                         </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Densité:</span>
-                        <span className="font-medium">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h11M9 21V3m12 10h-7" />
+                          </svg>
+                          Densité:
+                        </span>
+                        <span className="font-medium text-gray-800">
                           {populationData.density} hab/km²
                         </span>
                       </div>
@@ -172,24 +211,41 @@ function App() {
                 )}
 
                 {weatherData && (
-                  <div className="bg-white p-4 rounded-lg shadow-md">
-                    <h2 className="text-xl font-semibold mb-3">Météo</h2>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Température:</span>
-                        <span className="font-medium">
+                  <div className="bg-white p-5 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
+                    <h2 className="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">
+                      Météo
+                    </h2>
+                    <div className="space-y-3.5">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h11M9 21V3m12 10h-7" />
+                          </svg>
+                          Température:
+                        </span>
+                        <span className="font-medium text-gray-800">
                           {weatherData.temperature}°C
                         </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Humidité:</span>
-                        <span className="font-medium">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h11M9 21V3m12 10h-7" />
+                          </svg>
+                          Humidité:
+                        </span>
+                        <span className="font-medium text-gray-800">
                           {weatherData.humidity}%
                         </span>
                       </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Vent:</span>
-                        <span className="font-medium">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h11M9 21V3m12 10h-7" />
+                          </svg>
+                          Vent:
+                        </span>
+                        <span className="font-medium text-gray-800">
                           {weatherData.windSpeed} m/s
                         </span>
                       </div>
