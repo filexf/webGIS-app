@@ -28,9 +28,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <header className="bg-blue-700 text-white p-4 shadow-md">
-        <div className="container mx-auto">
-          <h1 className="text-3xl font-bold">WebGIS Analyzer</h1>
+      <header className="bg-sky-700 text-white p-4 shadow-md">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold ">WebGIS Analyzer</h1>
           <p className="text-sm mt-1">
             Dessinez un polygone sur la carte pour analyser les données de la
             zone
