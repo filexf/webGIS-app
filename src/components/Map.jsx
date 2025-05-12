@@ -217,25 +217,7 @@ const MapComponent = ({
         <DrawControl onPolygonDrawn={onPolygonDrawn} />
       </MapContainer>
 
-      {/* Sélecteur de fond de carte en dehors de la carte */}
-      <div className="absolute bottom-4 left-4 bg-white p-2 rounded-md shadow-md z-[1000] max-w-xs">
-        <div className="text-sm font-semibold mb-1">Fond de carte</div>
-        <div className="grid grid-cols-2 gap-1 text-xs">
-          {Object.entries(basemaps).map(([key, layer]) => (
-            <button
-              key={key}
-              onClick={() => setSelectedBasemap(key)}
-              className={`px-2 py-1 rounded ${
-                key === selectedBasemap
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              {layer.name}
-            </button>
-          ))}
-        </div>
-      </div>
+
     </div>
   );
 };
