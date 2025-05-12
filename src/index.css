@@ -3,3 +3,47 @@
 html {
   height: 100%;
 }
+
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  height: 100%;
+}
+
+/* Styles spécifiques pour Leaflet */
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+}
+
+.leaflet-div-icon {
+  background: transparent;
+  border: none;
+}
+
+/* Fix pour les styles de contrôle de dessin */
+.leaflet-draw-toolbar a {
+  background-image: url("https://unpkg.com/leaflet-draw/dist/images/spritesheet.png");
+  background-repeat: no-repeat;
+}
+
+.leaflet-draw-toolbar a.leaflet-draw-draw-polygon {
+  background-position: -31px -2px;
+}
+
+.leaflet-touch .leaflet-draw-toolbar a.leaflet-draw-draw-polygon {
+  background-position: -29px -2px;
+}
+
+/* Styles pour le survol des boutons */
+.leaflet-draw-actions a {
+  background-color: #fff;
+  color: #333;
+}
+
+.leaflet-draw-actions a:hover {
+  background-color: #f4f4f4;
+}
