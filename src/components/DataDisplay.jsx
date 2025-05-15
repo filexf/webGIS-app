@@ -6,9 +6,11 @@ import {
   Legend,
   LinearScale,
   LineElement,
+  LineController,
   PointElement,
   Title,
   Tooltip,
+  BarController,
 } from "chart.js";
 import { useEffect, useState } from "react";
 import { Bar, Doughnut, Pie } from "react-chartjs-2";
@@ -23,6 +25,8 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  BarController,
+  LineController,
   PointElement,
   LineElement,
   Title,
