@@ -1,16 +1,16 @@
 import {
   ArcElement,
+  BarController,
   BarElement,
   CategoryScale,
   Chart as ChartJS,
   Legend,
   LinearScale,
-  LineElement,
   LineController,
+  LineElement,
   PointElement,
   Title,
   Tooltip,
-  BarController,
 } from "chart.js";
 import { useEffect, useState } from "react";
 import { Bar, Doughnut, Pie } from "react-chartjs-2";
