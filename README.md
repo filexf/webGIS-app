@@ -1,8 +1,6 @@
 # WebGIS Analyzer
 
-
 <img src="/public/Web-gis-icon.png" alt="Logo WebGIS" width="200"/>
->>>>>>> origin/master
 
 ## 📋 Overview
 
