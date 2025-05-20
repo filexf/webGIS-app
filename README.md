@@ -1,6 +1,6 @@
 # WebGIS Analyzer
 
-![Logo WebGIS](/public/Web-gis-icon.png)
+<img src="/public/Web-gis-icon.png" alt="Logo WebGIS" width="100"/>
 
 ## 📋 Overview
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./App.css";
+
 import DataDisplay from "./components/DataDisplay";
 import MapComponent from "./components/Map";
 import {
