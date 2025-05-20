@@ -1,12 +1,14 @@
 # WebGIS Analyzer
 
-<img src="/public/Web-gis-icon.png" alt="Logo WebGIS" width="100"/>
+
+<img src="/public/Web-gis-icon.png" alt="Logo WebGIS" width="200"/>
+>>>>>>> origin/master
 
 ## 📋 Overview
 
 WebGIS Analyzer demonstrates modern web development practices through a geographic data visualization application. Built with React and Vite, it showcases real-time data processing, interactive mapping, and responsive design.
 
-**Live Demo:** [Web GIS Application] (https://data-visualizer-mocha.vercel.app/)
+**Live Demo:** https://data-visualizer-mocha.vercel.app/
 
 
 ## 🚀 Key Features
@@ -104,11 +106,9 @@ src/
 
 ## 📱 Demo & Screenshots
 
-The application is live at [https://data-visualizer-mocha.vercel.app/]
+The application is live at https://data-visualizer-mocha.vercel.app/
 
-[Add screenshots or GIFs showing key features]
-
-Check some screenshots here otherwise : https://filexf.github.io/felix-portfolio/#/applications
+Check some screenshots on my portfolio : https://filexf.github.io/felix-portfolio/#/applications
 
 ## 🎓 Learning Outcomes
 
@@ -126,4 +126,4 @@ Feel free to reach out for any questions or opportunities!
 
 - LinkedIn: https://www.linkedin.com/in/felix-orain/
 - Email: felix.orain@gmail.com
-- Portfolio: filexf.github.io/felix-portfolio
+- Portfolio: https://filexf.github.io/felix-portfolio/
